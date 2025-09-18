@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BistroOps</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<header>
+  <h1>Bistro<span>Ops</span></h1>
+  {% if current_user.is_authenticated %}
+  <nav>
+    <a href="{{ url_for('dashboard') }}">Dashboard</a>
+    <a href="{{ url_for('shifts') }}">Dienstplan</a>
+    <a href="{{ url_for('team') }}">Team</a>
+    {% if current_user.role in ('shift_lead','manager') %}
+      <a href="{{ url_for('reservations') }}">Reservierungen</a>
+      <a href="{{ url_for('reports') }}">Schichtberichte</a>
+      <a href="{{ url_for('hours') }}">Stunden</a>
+    {% else %}
+      <a href="{{ url_for('hours') }}">Stunden</a>
+    {% endif %}
+    {% if current_user.role == 'manager' %}
+      <a href="{{ url_for('deposit') }}">Kleiderpfand</a>
+      <a href="{{ url_for('users') }}">Benutzer</a>
+    {% endif %}
+    <a href="{{ url_for('logout') }}">Logout</a>
+  </nav>
+  {% endif %}
+</header>
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <ul class="flash">
+        {% for cat,msg in messages %}<li class="{{cat}}">{{ msg }}</li>{% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer><small>© {{ 2025 }} BistroOps — Roles Edition</small></footer>
+</body>
+</html>

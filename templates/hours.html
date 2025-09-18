@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Stunden</h2>
+<form method="post" class="inline-form">
+  <select name="user_id" {% if current_user.role=='waiter' %}disabled{% endif %}>
+    {% for u in users %}
+      <option value="{{ u.id }}" {% if u.id==current_user.id %}selected{% endif %}>{{ u.username }}</option>
+    {% endfor %}
+  </select>
+  {% if current_user.role=='waiter' %}
+    <input type="hidden" name="user_id" value="{{ current_user.id }}">
+  {% endif %}
+  <input type="datetime-local" name="start" required>
+  <input type="datetime-local" name="end" required>
+  <input name="note" placeholder="Notiz">
+  <button>Eintragen</button>
+</form>
+<table>
+  <tr><th>User</th><th>Start</th><th>Ende</th><th>Std</th><th>Notiz</th><th></th></tr>
+  {% for t in data %}
+  {% set hours = ((t.end - t.start).total_seconds()/3600) %}
+  <tr>
+    <td>{{ t.user.username }}</td>
+    <td>{{ t.start.strftime("%Y-%m-%d %H:%M") }}</td>
+    <td>{{ t.end.strftime("%Y-%m-%d %H:%M") }}</td>
+    <td>{{ '%.2f'|format(hours) }}</td>
+    <td>{{ t.note }}</td>
+    <td>
+      {% if current_user.role in ('shift_lead','manager') or t.user_id==current_user.id %}
+      <form method="post" action="{{ url_for('hours_delete', id=t.id) }}"><button class="danger">Löschen</button></form>
+      {% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

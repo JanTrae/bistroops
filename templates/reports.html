@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Schichtberichte</h2>
+<form method="post" class="inline-form">
+  <input type="date" name="date" required>
+  <input type="number" step="0.01" name="revenue" placeholder="Umsatz €">
+  <input name="issues" placeholder="Vorkommnisse">
+  <input name="notes" placeholder="Notizen">
+  <button>Speichern</button>
+</form>
+<table>
+  <tr><th>Datum</th><th>Leitung</th><th>Umsatz</th><th>Vorkommnisse</th><th>Notizen</th><th></th></tr>
+  {% for r in data %}
+  <tr>
+    <td>{{ r.date.strftime("%Y-%m-%d") }}</td>
+    <td>{{ r.lead.full_name or r.lead.username }}</td>
+    <td>{{ '%.2f'|format(r.revenue) }}</td>
+    <td>{{ r.issues }}</td>
+    <td>{{ r.notes }}</td>
+    <td>
+      <form method="post" action="{{ url_for('reports_delete', id=r.id) }}"><button class="danger">Löschen</button></form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
