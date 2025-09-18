@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dashboard</h2>
+<div class="grid">
+  <div class="tile"><strong>{{ stats.shifts }}</strong><span>Schichten</span></div>
+  <div class="tile"><strong>{{ stats.reservations }}</strong><span>Reservierungen</span></div>
+  <div class="tile"><strong>{{ stats.reports }}</strong><span>Schichtberichte</span></div>
+  <div class="tile"><strong>{{ stats.hours }}</strong><span>Stundeneinträge</span></div>
+  <div class="tile"><strong>{{ stats.deposits }}</strong><span>Kleiderpfand</span></div>
+  <div class="tile"><strong>{{ stats.users }}</strong><span>Benutzer</span></div>
+</div>
+{% endblock %}

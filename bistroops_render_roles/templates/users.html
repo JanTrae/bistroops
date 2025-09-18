@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Benutzerverwaltung</h2>
+<form method="post" class="inline-form">
+  <input name="username" placeholder="username" required>
+  <input name="full_name" placeholder="Name">
+  <input name="password" placeholder="password" required>
+  <select name="role">
+    <option value="waiter">waiter</option>
+    <option value="shift_lead">shift_lead</option>
+    <option value="manager">manager</option>
+  </select>
+  <button>Anlegen</button>
+</form>
+<table>
+  <tr><th>Username</th><th>Name</th><th>Rolle</th><th></th></tr>
+  {% for u in data %}
+  <tr>
+    <td>{{ u.username }}</td>
+    <td>{{ u.full_name }}</td>
+    <td>{{ u.role }}</td>
+    <td>
+      {% if current_user.id != u.id %}
+      <form method="post" action="{{ url_for('users_delete', id=u.id) }}"><button class="danger">Löschen</button></form>
+      {% else %}<em>du</em>{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

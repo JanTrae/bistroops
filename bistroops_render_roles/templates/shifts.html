@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Dienstplan</h2>
+{% if current_user.role in ('shift_lead','manager') %}
+<form method="post" class="inline-form">
+  <input name="employee" placeholder="Mitarbeiter" required>
+  <input name="role" placeholder="Rolle">
+  <input type="datetime-local" name="start" required>
+  <input type="datetime-local" name="end" required>
+  <button>Schicht anlegen</button>
+</form>
+{% endif %}
+<table>
+  <tr><th>Mitarbeiter</th><th>Rolle</th><th>Start</th><th>Ende</th><th>Std</th><th></th></tr>
+  {% for s in data %}
+    {% set hours = ((s.end - s.start).total_seconds()/3600) %}
+    <tr>
+      <td>{{ s.employee }}</td><td>{{ s.role }}</td>
+      <td>{{ s.start.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>{{ s.end.strftime("%Y-%m-%d %H:%M") }}</td>
+      <td>{{ '%.2f'|format(hours) }}</td>
+      <td>
+        {% if current_user.role in ('shift_lead','manager') %}
+        <form method="post" action="{{ url_for('shifts_delete', id=s.id) }}">
+          <button class="danger">Löschen</button>
+        </form>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

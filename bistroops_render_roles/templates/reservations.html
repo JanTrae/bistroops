@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Reservierungen</h2>
+<form method="post" class="inline-form">
+  <input name="customer" placeholder="Name" required>
+  <input name="size" type="number" min="1" value="2">
+  <input name="at" type="datetime-local" required>
+  <input name="notes" placeholder="Notizen">
+  <button>Anlegen</button>
+</form>
+<table>
+  <tr><th>Datum/Zeit</th><th>Name</th><th>Personen</th><th>Notizen</th><th></th></tr>
+  {% for r in data %}
+  <tr>
+    <td>{{ r.at.strftime("%Y-%m-%d %H:%M") }}</td>
+    <td>{{ r.customer }}</td>
+    <td>{{ r.size }}</td>
+    <td>{{ r.notes }}</td>
+    <td>
+      <form method="post" action="{{ url_for('res_delete', id=r.id) }}">
+        <button class="danger">Löschen</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
