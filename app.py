@@ -310,4 +310,8 @@ def users_delete(id):
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
+        # falls keine Benutzer existieren → Standardaccounts anlegen
+        if not User.query.first():
+            from app import db_init
+            db_init()
     app.run(debug=True)
